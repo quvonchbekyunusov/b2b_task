@@ -40,6 +40,7 @@ export class EventRepositoryImpl implements IEventRepository {
       }
     } else {
       event.status = EventStatus.PENDING;
+      event.lastSyncError = 'Network error';
       event.syncAttempts = 0;
       await this.localDataSource.saveEvent(event);
       return event;

@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar, useColorScheme } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import store from './store';
+import store, { persistor } from './store';
 import ObjectListScreen from './screens/ObjectListScreen';
 import CreateEventScreen from './screens/CreateEventScreen';
 import EventDetailScreen from './screens/EventDetailScreen';
@@ -18,6 +18,7 @@ import { NetworkInfo } from './core/network/networkInfo';
 import { EventLocalDataSource } from './data/local/eventLocalDataSource';
 import { EventRepositoryImpl } from './data/repositories/EventRepositoryImpl';
 import { setEventRepository, useAutoSync } from './core/hooks/useEvents';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const Stack = createNativeStackNavigator();
 
@@ -122,9 +123,11 @@ function App() {
 
   return (
     <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <AppContent />
-      </QueryClientProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <AppContent />
+        </QueryClientProvider>
+      </PersistGate>
     </Provider>
   );
 }
